@@ -53,7 +53,7 @@ public class VoteProcessor {
 	void listVotingResult(){
 		Collections.sort(group);
 		for (Child child : group) {
-			System.out.println(child.getName() + " " + child.getVoters().size());
+			System.out.println(child.toString());
 		}
 	}
 	

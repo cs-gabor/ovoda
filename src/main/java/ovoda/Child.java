@@ -50,4 +50,11 @@ public class Child implements Comparable<Child> {
 		return 0;
 	}
 
+
+
+	@Override
+	public String toString() {
+		return this.getName() + " " + this.getVoters().size();
+	}
+
 }
