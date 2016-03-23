@@ -36,7 +36,7 @@ public class VoteProcessor {
 	}
 	
 	String[] separateVotestringToStringarray(String line){
-		return line.split(separator); //az összes white space eseten szétszed és ezek kombinacioinal is
+		return line.split(separator); 
 	}
 	
 
