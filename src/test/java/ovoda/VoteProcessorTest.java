@@ -6,7 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
+
 
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class VoteProcessorTest {
 			InputStream is;
 			try {
 				is = new FileInputStream("ovisok.txt");
-				ovisok.readFromStream(is);
+					assertEquals("andi",ovisok.processClassVotes(is));
 			} catch (FileNotFoundException e) {
 				System.out.println("Exception thrown  :" + e);
 			} catch (IOException e) {
@@ -28,13 +28,21 @@ public class VoteProcessorTest {
 			}
 			
 			ovisok.listVotingResult();
-			System.out.println();
-			
-			assertEquals("andi",ovisok.getTheMostPopularChildsName());
 		
 	
 		
 	}
 	
-
+	@Test
+	public void testSetConstDelimiter(){
+			
+		String names= "alma peti andi regina dávid zsuzsi";
+		VoteProcessor ovisok = new VoteProcessor();
+		ovisok.setConstDelimiter(names);
+		System.out.println("----" + ovisok.getSeparator() + "----");
+		assertEquals(" ", ovisok.getSeparator());
+		
+		
+	}
+	
 }

@@ -4,30 +4,53 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class VoteProcessor {
 	
 	List<Child> group = new ArrayList<Child>();
+	String separator;
+	
+	String processClassVotes(InputStream is) throws IOException{
+		readFromStream(is);
+		return getTheMostPopularChildsName();
+	}
+	
 	
 	void readFromStream(InputStream is) throws IOException{
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
+		
+		BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 		String line;
+		boolean onlygetdelimiteronce = false;
 		while((line = br.readLine()) != null){
-			voteProcess(separateVotes(line));
+			if (!onlygetdelimiteronce) {
+				setConstDelimiter(line);
+				onlygetdelimiteronce = true;
+			}
+			separateVoteToVoterAndVotedNames(separateVotestringToStringarray(line));
+		}	
+	}
+	
+	String[] separateVotestringToStringarray(String line){
+		return line.split(separator); //az összes white space eseten szétszed és ezek kombinacioinal is
+	}
+	
+
+	void setConstDelimiter(String line){
+		Pattern checkWhiteSpace = Pattern.compile("\\s[A-Za-z]"); 
+		Matcher whitespacematcher = checkWhiteSpace.matcher(line);
+		while(whitespacematcher.find()){
+			separator = String.valueOf(line.charAt(whitespacematcher.start()));
+			return;
 		}
 		
 	}
-	
-	String[] separateVotes(String line){
-		return line.split("\\s+"); //az összes white space eseten szétszed és ezek kombinacioinal is
-	}
 
-	void vote(String voterName, String votedName){
+	void createNewChildOrAddVoterToExistingChild(String voterName, String votedName){
 
 		if (voterName.equals(votedName)) {
 			return;
@@ -42,10 +65,10 @@ public class VoteProcessor {
 		group.add(new Child(votedName,voterName));
 	}
 	
-	void voteProcess(String[] votedNames){
+	void separateVoteToVoterAndVotedNames(String[] votedNames){
 		String voterName = votedNames[0];
 		for (int i = 1; i < votedNames.length; i++) {
-			vote(voterName, votedNames[i]);
+			createNewChildOrAddVoterToExistingChild(voterName, votedNames[i]);
 		}
 	}
 	
@@ -61,4 +84,9 @@ public class VoteProcessor {
 		Collections.sort(group);
 		return group.get(0).getName();
 	}
+	
+	public String getSeparator() {
+		return separator;
+	}
+
 }
